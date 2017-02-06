@@ -1,0 +1,14 @@
+.button {
+  background-color: #004746;
+  border: 1px solid #0ff;
+  border-radius:1px;
+  -webkit-border-radius:1px;
+  -moz-border-radius:1px;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 1);
+  -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 1);
+  -moz-box-shadow: inset 0 0 6px rgba(255, 255, 255, 1);
+  color: #0ff;
+  display: inline;
+  margin: 3px;
+  padding: 2px 15px;
+}

@@ -1,0 +1,261 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Ingress Resistence</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/RankList.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/vue.min.js"></script>
+
+    <script type="text/x-template" id="grid-template">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th v-for="(key, val) in columns">
+                {{val}}
+                <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="entry in data" :class="{active: filterKey == entry.agentName}">
+            <td v-for="(key, val) in columns" >
+                {{entry[key]}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+    </script>
+</head>
+
+<body>
+    <div id="rank-list">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img class="brand-size-change" alt="Brand" src="ingressPicture/resistance_key.svg">
+                    </a>
+                    <div id="navbar" class="collapsed" aria-expanded="false" style="float:left;">
+                        <ul class="nav navbar-nav" role="tablist">
+                            <li>
+                                <p class="navbar-text hidden-xs" style="font-size:18px">Fuzhou Ingress</p>
+                            </li>
+                            <li role="presentation" class="active"><a href="index.html">排名</a></li>
+                            <li role="presentation"><a href="information.html">游戏简介</a></li>
+                            <li role="presentation" ><a href="messageboard.html">聊天室</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+
+        <div class="container">
+            <h3 class="page-header">Ingress Rank <small>RESISTANCE</small></h3>
+
+            <div class="row agent-information">
+                <div class="col-md-2 hidden-xs hidden-sm">
+                    <img src="ingressPicture/FuzhouResistance.min.png" alt="logo" class="img-responsive agent-information-img">
+                </div>
+
+
+                <div class="col-md-7 col-xs-7 col-sm-7 agent-information-middle">
+                    <form role="form">
+
+                        <div class="row">
+
+                            <div class="col-md-7 col-xs-12 col-sm-8 input-group">
+                                <!-- <h4 id="agentname" class="text-center">yazawaneko</h4>-->
+
+
+                                <input type="text" class="form-control ingress-input" placeholder="IngressID" v-model="searchQuery">
+                                <span class="input-group-btn">
+                                    <button class="btn ingress-button" type="button" v-on:click="save">锁定ID</button>
+                                </span>
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-xs-12 col-sm-8 input-group">
+                                <!--<h4 id="missionpoint" class="text-center">10000 <small>pt</small></h4>-->
+                                <label for="exampleInputAgentName"><em>write your ID, get rank!</em></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 col-xs-5 col-sm-4 agent-information-left">
+                    <!--<h3 class="text-warning">NO.5</h3>-->
+                    <h3 class="text-warning">{{rank}}</h3>
+                </div>
+            </div>
+            <div class="row agent-table">
+                <simple-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+                </simple-grid>
+            </div>
+        </div>
+        <footer>
+            <div class="container">
+                <div class="row text-center" :class="{hidden:loading}">
+                    更新时间: &nbsp;{{updateTime}}
+                </div>
+                <div class="row text-center" :class="{hidden:!loading}">
+                    <!-- 加载中...-->
+                    <div class="spinner">
+                        <div class="cube1"></div>
+                        <div class="cube2"></div>
+                        <div class="cube3"></div>
+                        <div class="cube4"></div>
+                        <div class="cube5"></div>
+                    </div>
+        </footer>
+        </div>
+        <script type="text/javascript">
+
+function goodTime(str){
+ var now = new Date().getTime(),
+ oldTime = new Date(str).getTime(),
+ difference = now - oldTime,
+ result='',
+ second = 1000;
+ minute = second * 60,
+ hour = minute * 60,
+ day = hour * 24,
+ halfamonth = day * 15,
+ month = day * 30,
+ year = month * 12,
+ 
+ _year = difference/year,
+ _month =difference/month,
+ _week =difference/(7*day),
+ _day =difference/day,
+ _hour =difference/hour,
+ _min =difference/minute;
+ _sec =difference/second;
+ if(_year>=1) {result= "" + ~~(_year) + " 年前"}
+ else if(_month>=1) {result= "" + ~~(_month) + " 个月前"}
+ else if(_week>=1) {result= "" + ~~(_week) + " 周前"}
+ else if(_day>=1) {result= "" + ~~(_day) +" 天前"}
+ else if(_hour>=1) {result= "" + ~~(_hour) +" 个小时前"}
+ else if(_min>=1) {result= "" + ~~(_min) +" 分钟前"}
+ else if(_sec>=1) {result= "" + ~~(_sec) +" 秒前"}
+ else result="刚刚";
+ return result;
+}
+
+Vue.component('simple-grid', {
+  template: '#grid-template',
+  props: {
+    data: Array,
+    columns: Object,
+    filterKey: String,
+    save: Function
+  },
+  data: function () {
+    var sortOrders = {}
+    for (var key in this.columns) {
+        sortOrders[key] = 1
+    }
+    return {
+      sortKey: '',
+      sortOrders: sortOrders
+    }
+  },
+  methods: {
+    sortBy: function (key) {
+      this.sortKey = key
+      this.sortOrders[key] = this.sortOrders[key] * -1
+    }
+  }
+})
+
+// bootstrap the demo
+var rankList = new Vue({
+    el: '#rank-list',
+    data: {
+        loading: false,
+        searchQuery:'',
+        gridColumns: {
+            rank : '#',
+            'agentName':'AgentName', 
+            'points':'MissionPoints'
+        },
+        gridData: [
+            {
+                "rank": 1,
+                "agentName": "lightrabbit",
+                "points": 80
+            }
+        ],
+        updateTimestamp: (new Date()).getTime()
+    },
+    computed: {
+        updateTime: function() {
+            return goodTime(new Date(this.updateTimestamp));
+        },
+        rank: function(){
+            var items = this.gridData;
+            var rets = "No Rank";
+            for(var i = 0; i < items.length; i++) {
+                if (items[i].agentName === this.searchQuery) {
+                    rets = "No." + items[i].rank;
+                }
+            }
+            return rets;
+        },
+        /*searchQuery: {
+            set:function(value){
+                localStorage.agentName = value;
+            },
+            get: function(){
+                return localStorage.agentName;
+            }
+        }*/
+    },
+    methods: {
+        save: function(){
+            localStorage.agentName = this.searchQuery;
+            alert('设置成功');
+        }
+    }
+});
+
+function loadRank(){
+    rankList.loading = true;
+    $.get('result.json',function(result){
+        var items = result.items;
+        for (var i = 0; i < items.length; i++) {
+            items[i].rank = i+1;
+        }
+        rankList.gridData = items;
+        rankList.updateTimestamp = result.timestamp;
+        rankList.searchQuery = localStorage.agentName;
+        rankList.loading = false;
+    });
+}
+
+$(document).ready(loadRank);
+$(window).focus(loadRank);
+    </script>
+</body>
+
+</html>
